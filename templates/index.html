@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>Email Spam Classifier</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6fb;
+      margin: 0; padding: 0;
+    }
+    .container {
+      max-width: 650px;
+      margin: 36px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(30,30,60,0.10);
+      padding: 32px 38px 38px 38px;
+    }
+    h2 { color: #3a3a8a; text-align: center; }
+    form textarea {
+      width: 100%;
+      border-radius: 8px;
+      border: 1.5px solid #b7b7df;
+      padding: 12px;
+      font-size: 1.08em;
+      background: #f7f7fc;
+      transition: border 0.2s;
+      margin-bottom: 14px;
+      min-height: 90px;
+      resize: vertical;
+    }
+    form textarea:focus {
+      border: 1.5px solid #7676fa;
+      outline: none;
+      background: #f5f6fe;
+    }
+    button {
+      padding: 11px 30px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg,#5858e8 0%, #8686fc 100%);
+      color: white;
+      font-size: 1.1em;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 6px #0001;
+      margin-top: 7px;
+      transition: background .18s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #6363ea 0%, #9797ff 100%);
+    }
+    .result-block {
+      margin: 26px 0;
+      border-radius: 10px;
+      border: 1.5px solid #eee;
+      background: #f7f8ff;
+      padding: 18px 16px;
+      box-shadow: 0 2px 8px #0001;
+    }
+    .spam { color: #e83a43; font-weight: bold; font-size: 1.15em; }
+    .ham { color: #339760; font-weight: bold; font-size: 1.15em; }
+    .radio-group {
+      margin: 16px 0 10px 0;
+    }
+    .radio-group label {
+      font-size: 1.05em;
+      margin-right: 22px;
+      cursor: pointer;
+    }
+    .saved-block {
+      background: #d4e8d4;
+      border: 1.2px solid #62b062;
+      border-radius: 7px;
+      color: #226622;
+      font-size: 1.1em;
+      font-weight: 500;
+      padding: 13px;
+      margin-top: 15px;
+      text-align: center;
+    }
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .nav a {
+      margin-left: 12px;
+      color: #5858e8;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 7px 20px;
+      border-radius: 7px;
+      border: 1px solid #ececfc;
+      background: #f5f6fe;
+      transition: background 0.18s, color 0.18s;
+    }
+    .nav a:hover {
+      background: #5858e8;
+      color: white;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 16px 5vw; }
+      form textarea { min-height: 65px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="nav">
+    <a href="/train">Huấn luyện lại mô hình</a>
+  </div>
+  <h2>Phân loại Email Spam</h2>
+  <form action="/" method="POST" autocomplete="off">
+    <textarea name="email" placeholder="Nhập nội dung email...">{% if email_text %}{{ email_text }}{% endif %}</textarea>
+    <button type="submit">Kiểm tra</button>
+  </form>
+
+  {% if email_text is defined and prediction is defined %}
+    <div class="result-block">
+      <div><b>Nội dung vừa nhập:</b></div>
+      <div style="white-space: pre-wrap; color:#444; margin-bottom:8px;">{{ email_text }}</div>
+      {% if prediction == 1 %}
+        <div class="spam">Kết quả hệ thống: SPAM!</div>
+      {% else %}
+        <div class="ham">Kết quả hệ thống: KHÔNG PHẢI SPAM (HAM)</div>
+      {% endif %}
+
+      {% if not saved %}
+      <form action="/" method="POST" style="margin-top:14px;">
+        <input type="hidden" name="email" value="{{ email_text }}">
+        <input type="hidden" name="prediction" value="{{ prediction }}">
+        <div class="radio-group">
+          <label><input type="radio" name="label" value="ham" required> Tôi xác nhận: Không phải Spam (Ham)</label>
+          <label><input type="radio" name="label" value="spam" required> Tôi xác nhận: Spam</label>
+        </div>
+        <button type="submit" name="save_train" value="1">Lưu vào bộ huấn luyện</button>
+      </form>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if saved %}
+    <div class="saved-block">
+      Đã lưu email vào bộ huấn luyện với nhãn: <b>{{ label|upper }}</b>
+    </div>
+    <div style="text-align:center; margin-top:15px;">
+      <a href="/" style="color:#333; text-decoration:underline;">Nhập email mới</a>
+    </div>
+  {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+[2025-05-23 23:47:34] Đang khởi động huấn luyện lại mô hình...
+[2025-05-23 23:47:34] Đọc 4993 mẫu từ spam_ham_dataset.csv.
+[2025-05-23 23:47:34] Đã tìm thấy 1 mail mới từ new_emails.csv để huấn luyện lại.
+[2025-05-23 23:47:34] Tổng mẫu sau gộp: 4994 | Ham: 3531 | Spam: 1463
+[2025-05-23 23:47:34] Đang mã hóa nhãn...
+[2025-05-23 23:47:34] Đã mã hóa nhãn.
+[2025-05-23 23:47:34] Đang tiền xử lý dữ liệu văn bản bằng transformed_text...
+[2025-05-23 23:52:13] Đang vector hóa dữ liệu (trên transformed_text)...
+[2025-05-23 23:52:14] Đã vector hóa dữ liệu. Kích thước X: (4994, 3000)
+[2025-05-23 23:52:14] Bắt đầu đánh giá mô hình bằng cross-validation (10-fold) trên tập train...
+[2025-05-23 23:52:14] Accuracy (train, 10-fold): [0.94       0.96571429 0.97142857 0.94285714 0.96285714 0.9512894
+ 0.93982808 0.95702006 0.94842407 0.96275072]
+[2025-05-23 23:52:14] Precision (train, 10-fold): [0.86725664 0.91071429 0.92727273 0.875      0.90990991 0.90654206
+ 0.85470085 0.88596491 0.87610619 0.91666667]
+[2025-05-23 23:52:14] Recall (train, 10-fold): [0.94230769 0.98076923 0.98076923 0.94230769 0.97115385 0.93269231
+ 0.96153846 0.98058252 0.96116505 0.96116505]
+[2025-05-23 23:52:14] F1 (train, 10-fold): [0.90322581 0.94444444 0.95327103 0.90740741 0.93953488 0.91943128
+ 0.90497738 0.93087558 0.91666667 0.93838863]
+[2025-05-23 23:52:14] Trung bình các chỉ số trên train (10-fold):
+[2025-05-23 23:52:14] Accuracy: 0.9542 ± 0.0108
+[2025-05-23 23:52:14] Precision: 0.8930 ± 0.0230
+[2025-05-23 23:52:14] Recall: 0.9614 ± 0.0166
+[2025-05-23 23:52:14] F1: 0.9258 ± 0.0170
+[2025-05-23 23:52:14] Score của từng estimator (các mô hình train ở mỗi fold) trên tập test:
+[2025-05-23 23:52:14] [0.94863242 0.9472982  0.94863242 0.94796531 0.94663109 0.94796531
+ 0.94596398 0.94929953 0.9472982  0.94796531]
+[2025-05-23 23:52:14] Score trung bình trên test: 0.9478 ± 0.0009
+[2025-05-23 23:52:15] Đang huấn luyện mô hình cuối cùng trên tập train đầy đủ...
+[2025-05-23 23:52:15] Hiệu suất (test 30%): Accuracy=0.9486, Precision=0.8674, Recall=0.9671, F1=0.9145
+[2025-05-23 23:52:15] Classification report:
+              precision    recall  f1-score   support
+
+           0       0.99      0.94      0.96      1073
+           1       0.87      0.97      0.91       426
+
+    accuracy                           0.95      1499
+   macro avg       0.93      0.95      0.94      1499
+weighted avg       0.95      0.95      0.95      1499
+
+[2025-05-23 23:52:15] Đang lưu model và vectorizer...
+[2025-05-23 23:52:15] Đã retrain và lưu model mới! Thời gian: 280.91 giây
+[2025-05-23 23:52:15] Đang chuyển toàn bộ mail mới sang spam_ham_dataset.csv...
+[2025-05-23 23:52:15] Đã chuyển toàn bộ mail mới sang spam_ham_dataset.csv.
+[2025-05-23 23:52:15] Đã reset file new_emails.csv (chỉ còn header).
