@@ -8,7 +8,7 @@ Dự án này sử dụng mô hình Naive Bayes để phân loại email thành 
 ## Cấu trúc thư mục
 - `main.py`: File chính để chạy ứng dụng.
 - `train_nb.py`: Script huấn luyện mô hình, sinh biểu đồ EDA, lưu model và vectorizer.
-- `utils.py`: Các hàm tiện ích xử lý text, lưu email mới, v.v.
+- `utils.py`: Lưu email mới, v.v.
 - `spam_ham_dataset.csv`: Dataset gốc, chứa các email đã gán nhãn.
 - `new_emails.csv`: Lưu các email mới chờ xác nhận nhãn để bổ sung vào dataset.
 - `model_nb.pkl`: File lưu model Naive Bayes đã huấn luyện.
