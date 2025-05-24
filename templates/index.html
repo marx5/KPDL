@@ -1,23 +1,70 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Email Spam Classifier</title>
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f4f6fb;
+      /* background: linear-gradient(135deg, #e0f7fa 0%, #e1bee7 100%); */ /* Professional gradient background */
+      /* Add background image */
+      background-image: url('/static/images/background.jpg');
+      background-size: cover; /* Đảm bảo ảnh phủ kín toàn bộ body */
+      /* background-position: center; */ /* Start position */
+      background-repeat: no-repeat; /* Không lặp lại ảnh */
+      background-attachment: fixed; /* Giữ ảnh nền cố định khi cuộn */
+
+      /* Animated Background Image */
+      /* background: linear-gradient(270deg, #e0f7fa, #e1bee7, #f8bbd0, #c8e6c9);
+      background-size: 800% 800%;
+      animation: gradientAnimation 15s ease infinite; */
+
+      /* Apply animation to background position */
+      background-position: 0% 0%; /* Start position for animation */
+      animation: imagePan 5s linear infinite alternate; /* Adjusted time for even faster animation */
+      background-size: 105% auto; /* Adjusted size to be slightly larger than viewport */
+
       margin: 0; padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333; /* Default text color */
     }
+
+    /* @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    } */
+
+    /* Keyframes for image pan animation */
+    @keyframes imagePan {
+      0% {
+        background-position: 0% 50%; /* Start from left, centered vertically */
+      }
+      100% {
+        background-position: 100% 50%; /* Move to right, centered vertically */
+      }
+    }
+
     .container {
-      max-width: 650px;
-      margin: 36px auto;
+      max-width: 600px; /* Adjusted max-width */
+      width: 90%; /* Responsive width */
+      margin: 20px auto;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 24px rgba(30,30,60,0.10);
       padding: 32px 38px 38px 38px;
+      box-sizing: border-box; /* Include padding in width */
     }
-    h2 { color: #3a3a8a; text-align: center; }
+    h2 { color: #3a3a8a; text-align: center; margin-bottom: 25px; }
     form textarea {
       width: 100%;
       border-radius: 8px;
@@ -26,9 +73,10 @@
       font-size: 1.08em;
       background: #f7f7fc;
       transition: border 0.2s;
-      margin-bottom: 14px;
-      min-height: 90px;
+      margin-bottom: 15px;
+      min-height: 150px; /* Adjusted height */
       resize: vertical;
+      box-sizing: border-box;
     }
     form textarea:focus {
       border: 1.5px solid #7676fa;
@@ -36,7 +84,7 @@
       background: #f5f6fe;
     }
     button {
-      padding: 11px 30px;
+      padding: 12px 30px; /* Slightly more padding */
       border: none;
       border-radius: 8px;
       background: linear-gradient(90deg,#5858e8 0%, #8686fc 100%);
@@ -45,29 +93,33 @@
       cursor: pointer;
       font-weight: 500;
       box-shadow: 0 2px 6px #0001;
-      margin-top: 7px;
-      transition: background .18s;
+      margin-top: 10px;
+      transition: background .18s ease;
     }
     button:hover {
       background: linear-gradient(90deg, #6363ea 0%, #9797ff 100%);
     }
     .result-block {
-      margin: 26px 0;
+      margin: 28px 0;
       border-radius: 10px;
       border: 1.5px solid #eee;
       background: #f7f8ff;
-      padding: 18px 16px;
+      padding: 20px 18px; /* Slightly more padding */
       box-shadow: 0 2px 8px #0001;
     }
+    .result-block b { color: #555; }
     .spam { color: #e83a43; font-weight: bold; font-size: 1.15em; }
     .ham { color: #339760; font-weight: bold; font-size: 1.15em; }
     .radio-group {
-      margin: 16px 0 10px 0;
+      margin: 18px 0 12px 0; /* Adjusted margin */
     }
     .radio-group label {
       font-size: 1.05em;
-      margin-right: 22px;
+      margin-right: 25px; /* More space */
       cursor: pointer;
+    }
+    .radio-group input[type="radio"] {
+      margin-right: 5px;
     }
     .saved-block {
       background: #d4e8d4;
@@ -76,66 +128,67 @@
       color: #226622;
       font-size: 1.1em;
       font-weight: 500;
-      padding: 13px;
-      margin-top: 15px;
+      padding: 15px; /* Slightly more padding */
+      margin-top: 20px; /* More space */
       text-align: center;
     }
     .nav {
       display: flex;
       justify-content: flex-end;
-      margin-top: 6px;
+      margin-bottom: 20px; /* Adjusted margin */
     }
     .nav a {
-      margin-left: 12px;
+      margin-left: 15px; /* More space */
       color: #5858e8;
       text-decoration: none;
       font-weight: 500;
-      padding: 7px 20px;
+      padding: 8px 22px; /* Adjusted padding */
       border-radius: 7px;
       border: 1px solid #ececfc;
       background: #f5f6fe;
-      transition: background 0.18s, color 0.18s;
+      transition: background 0.18s ease, color 0.18s ease;
     }
     .nav a:hover {
       background: #5858e8;
       color: white;
     }
     @media (max-width: 700px) {
-      .container { padding: 16px 5vw; }
-      form textarea { min-height: 65px; }
+      .container { padding: 20px 5vw; }
+      form textarea { min-height: 100px; }
+      .radio-group label { margin-right: 15px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="nav">
-    <a href="/train">Huấn luyện lại mô hình</a>
+    <a href="/train">Train Model Manually</a>
   </div>
-  <h2>Phân loại Email Spam</h2>
+  <h2>Email Spam Classifier</h2>
   <form action="/" method="POST" autocomplete="off">
-    <textarea name="email" placeholder="Nhập nội dung email...">{% if email_text %}{{ email_text }}{% endif %}</textarea>
-    <button type="submit">Kiểm tra</button>
+    <textarea name="email" placeholder="Enter email content...">{% if email_text %}{{ email_text }}{% endif %}</textarea>
+    <button type="submit">Classify</button>
   </form>
 
   {% if email_text is defined and prediction is defined %}
     <div class="result-block">
-      <div><b>Nội dung vừa nhập:</b></div>
-      <div style="white-space: pre-wrap; color:#444; margin-bottom:8px;">{{ email_text }}</div>
+      <div><b>Entered Content:</b></div>
+      <div style="white-space: pre-wrap; color:#444; margin-bottom:10px;">{{ email_text }}</div>
       {% if prediction == 1 %}
-        <div class="spam">Kết quả hệ thống: SPAM!</div>
+        <div class="spam">System Result: SPAM!</div>
       {% else %}
-        <div class="ham">Kết quả hệ thống: KHÔNG PHẢI SPAM (HAM)</div>
+        <div class="ham">System Result: NOT SPAM (HAM)</div>
       {% endif %}
 
       {% if not saved %}
-      <form action="/" method="POST" style="margin-top:14px;">
+      <form action="/" method="POST" style="margin-top:18px;">
         <input type="hidden" name="email" value="{{ email_text }}">
         <input type="hidden" name="prediction" value="{{ prediction }}">
         <div class="radio-group">
-          <label><input type="radio" name="label" value="ham" required> Tôi xác nhận: Không phải Spam (Ham)</label>
-          <label><input type="radio" name="label" value="spam" required> Tôi xác nhận: Spam</label>
+          <label><input type="radio" name="label" value="ham" required> I confirm: Not Spam (Ham)</label>
+          <label><input type="radio" name="label" value="spam" required> I confirm: Spam</label>
         </div>
-        <button type="submit" name="save_train" value="1">Lưu vào bộ huấn luyện</button>
+        <button type="submit" name="save_train" value="1">Save and Train</button>
       </form>
       {% endif %}
     </div>
@@ -143,10 +196,10 @@
 
   {% if saved %}
     <div class="saved-block">
-      Đã lưu email vào bộ huấn luyện với nhãn: <b>{{ label|upper }}</b>
+      Email saved for training with label: <b>{{ label|upper }}</b>
     </div>
-    <div style="text-align:center; margin-top:15px;">
-      <a href="/" style="color:#333; text-decoration:underline;">Nhập email mới</a>
+    <div style="text-align:center; margin-top:20px;">
+      <a href="/" style="color:#333; text-decoration:underline;">Enter New Email</a>
     </div>
   {% endif %}
 </div>

@@ -84,14 +84,6 @@ try:
         log(f"Không có new_emails.csv hoặc lỗi khi đọc file: {str(e)}")
         df_new = None
 
-    # Kiểm tra sự tồn tại của model cũ
-    has_old_model = os.path.isfile('model_nb.pkl') and os.path.isfile('vectorizer.pkl')
-
-    # Điều kiện dừng
-    if (df_new is None or added_new == 0) and has_old_model:
-        log("Không có mail mới và đã có model. Dừng huấn luyện lại, giữ nguyên model cũ.")
-        exit(0)
-
     # Nếu có mail mới thì gộp vào dữ liệu train
     if df_new is not None and added_new > 0:
         df = pd.concat([df, df_new], ignore_index=True)

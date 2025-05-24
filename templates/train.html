@@ -1,26 +1,75 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Huấn luyện lại mô hình</title>
+  <title>Train Model</title>
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f3f6fc;
+      /* background: #f3f6fc; */
+      /* Thêm ảnh nền. Thay thế 'your_background_image.jpg' bằng đường dẫn tới ảnh của bạn. */
+      /* Sử dụng đường dẫn tương đối từ thư mục static */
+      /* Add background image */
+      background-image: url('/static/images/train_background.jpg'); /* Use a different image for the train page */
+      background-size: cover;
+      /* background-position: center; */ /* Start position */
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+
+      /* Animated Background Image */
+      /* background: linear-gradient(270deg, #e0f7fa, #e1bee7, #f8bbd0, #c8e6c9);
+      background-size: 800% 800%;
+      animation: gradientAnimation 15s ease infinite; */
+
+      /* Apply animation to background position */
+      background-position: 0% 0%; /* Start position for animation */
+      animation: imagePan 5s linear infinite alternate; /* Adjusted time for even faster animation */
+      background-size: 105% auto; /* Adjusted size to be slightly larger than viewport */
+
       margin: 0; padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333; /* Đặt màu chữ mặc định dễ đọc trên nền */
     }
+
+    /* @keyframes gradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    } */
+
+    /* Keyframes for image pan animation */
+    @keyframes imagePan {
+      0% {
+        background-position: 0% 50%; /* Start from left, centered vertically */
+      }
+      100% {
+        background-position: 100% 50%; /* Move to right, centered vertically */
+      }
+    }
+
     .container {
-      max-width: 520px;
-      margin: 50px auto 0 auto;
+      max-width: 600px; /* Increased max-width */
+      width: 90%; /* Responsive width */
+      margin: 20px auto; /* Adjusted margin */
       background: #fff;
       border-radius: 14px;
       box-shadow: 0 4px 24px rgba(30,30,60,0.12);
       padding: 38px 40px 30px 40px;
       text-align: center;
+      box-sizing: border-box;
     }
     h2 {
       color: #3838ac;
-      margin-bottom: 22px;
+      margin-bottom: 25px; /* Adjusted margin */
     }
     button {
       padding: 13px 40px;
@@ -33,29 +82,30 @@
       font-weight: 500;
       box-shadow: 0 2px 6px #0001;
       margin-top: 15px;
-      transition: background .18s;
+      transition: background .18s ease;
     }
     button:hover {
       background: linear-gradient(90deg, #6363ea 0%, #9797ff 100%);
     }
     .log-box {
       text-align: left;
-      background: #151833;
-      color: #abffe0;
+      background: #1e1e1e; /* Darker background */
+      color: #cccccc; /* Lighter text */
       font-size: 1em;
       border-radius: 8px;
       padding: 17px 14px;
       margin: 30px 0 20px 0;
-      min-height: 150px;
-      max-height: 320px;
+      min-height: 200px; /* Increased min-height */
+      max-height: 400px; /* Increased max-height */
       overflow-y: auto;
       font-family: 'Consolas', 'Menlo', monospace;
       box-shadow: 0 1px 6px #0002;
       display: none;
       white-space: pre-wrap;
+      line-height: 1.4; /* Improved readability */
     }
     .nav {
-      margin-top: 24px;
+      margin-top: 25px; /* Adjusted margin */
     }
     .nav a {
       color: #5858e8;
@@ -65,8 +115,9 @@
       padding: 7px 22px;
       background: #f6f8fe;
       border: 1px solid #ececfc;
-      margin-top: 6px;
+      margin-top: 8px; /* Adjusted margin */
       display: inline-block;
+      transition: background 0.18s ease, color 0.18s ease;
     }
     .nav a:hover { background: #5858e8; color: white; }
     @media (max-width: 650px) {
@@ -76,11 +127,11 @@
 </head>
 <body>
   <div class="container">
-    <h2>Huấn luyện lại mô hình Naive Bayes</h2>
-    <button id="train-btn">Thực hiện huấn luyện lại</button>
+    <h2>Train Naive Bayes Model</h2>
+    <button id="train-btn">Start Training</button>
     <div id="logbox" class="log-box"></div>
     <div class="nav">
-      <a href="/">Quay về trang chủ</a>
+      <a href="/">Back to Classifier</a>
     </div>
   </div>
 
@@ -89,13 +140,13 @@
     const logbox = document.getElementById('logbox');
     btn.onclick = function() {
       btn.disabled = true;
-      logbox.innerText = "Đang khởi động huấn luyện lại mô hình...\n";
+      logbox.innerText = "Starting model training...\n";
       logbox.style.display = 'block';
 
       fetch('/train-log', { method: 'POST' })
         .then(response => {
           if (!response.body) {
-            logbox.innerText += "\nLỗi: Không thể đọc tiến trình!";
+            logbox.innerText += "\nError: Could not read stream!";
             return;
           }
           const reader = response.body.getReader();
@@ -103,7 +154,7 @@
           function read() {
             reader.read().then(({done, value}) => {
               if (done) {
-                logbox.innerText += "\n--- Đã hoàn thành huấn luyện lại mô hình! ---";
+                logbox.innerText += "\n--- Model training completed! ---";
                 btn.disabled = false;
                 return;
               }
@@ -115,7 +166,7 @@
           read();
         })
         .catch(error => {
-          logbox.innerText += "\nLỗi: " + error;
+          logbox.innerText += "\nError: " + error;
           btn.disabled = false;
         });
     }
